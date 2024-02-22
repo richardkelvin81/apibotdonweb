@@ -7,7 +7,7 @@ const flowBienvenida = addKeyword('hola').addAnswer ('Hola!, bienvenido a TAXICO
 const main = async  () =>{
 
     const provider = createProvider (BaileysProvider)
-    provider.initHttpServer(3002)
+    provider.initHttpServer(3001)
     provider.http?.server.post ('/enviar-whatsapp', handleCtx(async (bot,req,res)=>{
         const phone = req.body.phone
         const message = req.body.message
