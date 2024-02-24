@@ -2,7 +2,7 @@
 import { createBot, createFlow, MemoryDB, createProvider, addKeyword } from "@bot-whatsapp/bot"
 import { BaileysProvider, handleCtx } from "@bot-whatsapp/provider-baileys"
 
-const flowBienvenida = addKeyword('hola').addAnswer ('Hola!, bienvenido a PRONTO SERVICE')
+const flowBienvenida = addKeyword('hola').addAnswer ('Como estás!, bienvenido a PRONTO SERVICE')
 
 const main = async  () =>{
 
