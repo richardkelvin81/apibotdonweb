@@ -1,28 +1,32 @@
 
+
+
 import { createBot, createFlow, MemoryDB, createProvider, addKeyword } from "@bot-whatsapp/bot"
 import { BaileysProvider, handleCtx } from "@bot-whatsapp/provider-baileys"
+import cors from 'cors';
 
-const flowBienvenida = addKeyword('hola').addAnswer ('Como estás!, bienvenido a PRONTO SERVICE')
+const flowBienvenida = addKeyword('hola').addAnswer('¡Cómo estás!, bienvenido a PRONTO SERVICE');
 
-const main = async  () =>{
+const main = async () => {
+    const provider = createProvider(BaileysProvider);
+    provider.initHttpServer(3002);
 
-    const provider = createProvider (BaileysProvider)
-    provider.initHttpServer(3002)
-    provider.http?.server.post ('/enviar-whatsapp', handleCtx(async (bot,req,res)=>{
-        const phone = req.body.phone
-        const message = req.body.message
-        await bot.sendMessage(phone,message,{})
-        res.end ('Mensaje enviado desde servidor donWeb')
-    }))
+    const corsMiddleware = cors();
 
-    await createBot ({
+    provider.http?.server.post('/enviar-whatsapp', (req, res) => {
+        corsMiddleware(req, res, () => handleCtx(async (bot, req, res) => {
+            const phone = req.body.phone;
+            const message = req.body.message;
+            await bot.sendMessage(phone, message, {});
+            res.end('Mensaje enviado desde servidor DonWeb');
+        })(req, res));
+    });
 
+    await createBot({
         flow: createFlow([flowBienvenida]),
         database: new MemoryDB(),
         provider
-
-    })
-
+    });
 }
 
-main ()
+main();
