@@ -1,6 +1,3 @@
-
-
-
 import { createBot, createFlow, MemoryDB, createProvider, addKeyword } from "@bot-whatsapp/bot"
 import { BaileysProvider, handleCtx } from "@bot-whatsapp/provider-baileys"
 import cors from 'cors';
@@ -12,14 +9,15 @@ const main = async () => {
     provider.initHttpServer(3002);
 
     const corsMiddleware = cors();
+    provider.http?.server.use(corsMiddleware); // Aplica CORS a todas las rutas
 
     provider.http?.server.post('/enviar-whatsapp', (req, res) => {
-        corsMiddleware(req, res, () => handleCtx(async (bot, req, res) => {
+        handleCtx(async (bot, req, res) => {
             const phone = req.body.phone;
             const message = req.body.message;
             await bot.sendMessage(phone, message, {});
             res.end('Mensaje enviado desde servidor DonWeb');
-        })(req, res));
+        })(req, res);
     });
 
     await createBot({
